@@ -1,6 +1,8 @@
 package com.file.uploader.controller;
 
 import com.file.uploader.entity.Employee;
+import com.file.uploader.exception.EmployeeNotFoundException;
+import com.file.uploader.exception.ListOfEmployeeNotFoundException;
 import com.file.uploader.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +25,24 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Integer employeeId ){
-     Employee employee=  employeeService.getEmployee(employeeId);
-     return  new ResponseEntity<Employee>(employee,HttpStatus.OK);
+    public ResponseEntity<?> getEmployee(@PathVariable Integer employeeId )  {
+        Employee employee= null;
+        try {
+            employee = employeeService.getEmployee(employeeId);
+        } catch (EmployeeNotFoundException e) {
+            return  new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return  new ResponseEntity<Employee>(employee,HttpStatus.OK);
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<Employee>> getAllEmployees(){
-      List<Employee> employees=  employeeService.getALlEmployees();
+    public ResponseEntity getAllEmployees(){
+        List<Employee> employees=null;
+        try {
+            employees = employeeService.getALlEmployees();
+        } catch (Exception e) {
+          return   new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
       return new ResponseEntity<>(employees,HttpStatus.OK);
     }
 

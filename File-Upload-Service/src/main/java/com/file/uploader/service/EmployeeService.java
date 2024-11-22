@@ -1,6 +1,8 @@
 package com.file.uploader.service;
 
 import com.file.uploader.entity.Employee;
+import com.file.uploader.exception.EmployeeNotFoundException;
+import com.file.uploader.exception.ListOfEmployeeNotFoundException;
 import com.file.uploader.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,19 +22,22 @@ public class EmployeeService {
         return employee1;
     }
 
-    public Employee getEmployee(Integer employeeId) {
+    public Employee getEmployee(Integer employeeId) throws EmployeeNotFoundException {
         Optional<Employee> employee = employeeRepository.findById(employeeId);
 
         if (employee.isPresent()){
             return  employee.get();
         }
 
-        return null;
+        throw new EmployeeNotFoundException("Employee Not Found With Id : "+employeeId+" please give valid employeeId");
     }
 
     public List<Employee> getALlEmployees(){
       List<Employee> employees=  employeeRepository.findAll();
-      return  employees;
+      if(employees.size()<0){
+          return  employees;
+      }
+      throw  new ListOfEmployeeNotFoundException("list of employee not found ");
     }
 
     public Employee updateEmployee(Employee employee){
