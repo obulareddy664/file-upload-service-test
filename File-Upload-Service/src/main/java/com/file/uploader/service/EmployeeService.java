@@ -22,11 +22,13 @@ public class EmployeeService {
         return employee1;
     }
 
-    public Employee getEmployee(Integer employeeId) throws EmployeeNotFoundException {
-        Optional<Employee> employee = employeeRepository.findById(employeeId);
+    public Employee getEmployee(Integer employeeId)  {
+        if(employeeId!=null) {
+            Optional<Employee> employee = employeeRepository.findById(employeeId);
 
-        if (employee.isPresent()){
-            return  employee.get();
+            if (employee.isPresent()) {
+                return employee.get();
+            }
         }
 
         throw new EmployeeNotFoundException("Employee Not Found With Id : "+employeeId+" please give valid employeeId");

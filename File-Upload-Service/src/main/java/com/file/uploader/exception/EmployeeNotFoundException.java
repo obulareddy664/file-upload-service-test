@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class EmployeeNotFoundException extends Exception{
+public class EmployeeNotFoundException extends RuntimeException{
 
     private String message;
 
